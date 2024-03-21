@@ -4,12 +4,12 @@ const dbConnect = require("./config")
 const ModelAlumno = require("./alumnosSchema")
 const app = express()
 
-const port = 3001
+const port = process.send.PORT || 4000;
 const router = express.Router()
 
 
 router.get("/", async (req, res)=>{
-    res.send("Probando GET")
+    res.send("Hola Mundo")
 })
 
 //CRUD
