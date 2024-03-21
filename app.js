@@ -4,7 +4,7 @@ const dbConnect = require("./config")
 const ModelAlumno = require("./alumnosSchema")
 const app = express()
 
-const port = process.send.PORT || 4000;
+const port = process.env.PORT || 4000;
 const router = express.Router()
 
 
