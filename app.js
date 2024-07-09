@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const dbConnect = require("./config")
-const ModelAlumno = require("./alumnosSchema")
+const ModelPuntaje = require("./puntajeSchema")
 const app = express()
 
 //const port = 3001
@@ -16,41 +16,25 @@ router.get("/", async (req, res)=>{
 //CRUD
 
 //CREATE
-router.post("/nuevoAlumno", async (req, res)=>{
+router.post("/nuevoPuntaje", async (req, res)=>{
     const body = req.body
-    const respuesta = await ModelAlumno.create(body)
-    console.log("alumno nuevo agregado: ", respuesta)
+    const respuesta = await ModelPuntaje.create(body)
+    console.log("puntaje nuevo agregado: ", respuesta)
     res.send(respuesta)
 })
 
 //READ - one
-router.get("/getAlumno/:id", async (req, res)=>{
+router.get("/getPuntaje/:id", async (req, res)=>{
     const id = req.params.id
-    const respuesta = await ModelAlumno.findById(id)
+    const respuesta = await ModelPuntaje.findById(id)
     res.send(respuesta)
 })
 
 //READ - all
-router.get("/getAllAlumnos", async (req, res)=>{
-    const respuesta = await ModelAlumno.find({})
+router.get("/getAllPuntajes", async (req, res)=>{
+    const respuesta = await ModelPuntaje.find({})
     res.send(respuesta)
 })
-
-//UPDATE
-router.put("/updateAlumno/:id", async (req, res)=>{
-    const body = req.body
-    const id = req.params.id
-    const respuesta = await ModelAlumno.findByIdAndUpdate({_id: id}, body)
-    res.send(respuesta)
-})
-
-//DELETE
-router.delete("/deleteAlumno/:id", async (req,res)=>{
-    const id = req.params.id
-    const respuesta = await ModelAlumno.findByIdAndDelete({_id: id})
-    res.send(respuesta)
-})
-
 
 //habilitar CORS para todas las solicitudes
 app.use(cors())
