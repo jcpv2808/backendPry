@@ -58,6 +58,22 @@ dbConnect()
         app.listen(port, () => {
             console.log("Escuchando en el puerto:", port);
         });
+
+        // Inserción y eliminación periódica
+        setInterval(async () => {
+            try {
+                // Inserción
+                const nuevoPuntaje = { /* tu objeto de puntaje aquí */ };
+                const puntajeInsertado = await ModelPuntaje.create(nuevoPuntaje);
+                console.log("Puntaje nuevo agregado: ", puntajeInsertado);
+
+                // Eliminación
+                const puntajeEliminado = await ModelPuntaje.findByIdAndDelete(puntajeInsertado._id);
+                console.log("Puntaje eliminado: ", puntajeEliminado);
+            } catch (error) {
+                console.error("Error durante la inserción o eliminación periódica: ", error);
+            }
+        }, 5 * 60 * 1000); // Cada 5 minutos
     })
     .catch(error => {
         console.log("Error al conectar a la base de datos: ", error.message);
