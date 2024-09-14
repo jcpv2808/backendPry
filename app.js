@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dbConnect = require("./config");
-const ModelPuntaje = require("./puntajeSchema");
+const ModelCliente = require("./ClienteSchema");
 const app = express();
 
 const port = process.env.PORT || 4000;
@@ -13,36 +13,24 @@ router.get("/", async (req, res) => {
 
 // CRUD
 
+// READ - one
+router.get("/getDeuda/:dni", async (req, res) => {
+    const dni = req.params.dni;
+    const respuesta = await ModelCliente.findOne({dni});
+    res.send(respuesta);
+});
+
 // CREATE
-router.post("/nuevoPuntaje", async (req, res) => {
+router.post("/nuevoCliente", async (req, res) => {
     const body = req.body;
     try {
-        const respuesta = await ModelPuntaje.create(body);
-        console.log("Puntaje nuevo agregado: ", respuesta);
+        const respuesta = await ModelCliente.create(body);
+        console.log("Cliente nuevo agregado: ", respuesta);
         res.send(respuesta);
     } catch (error) {
-        if (error.code === 11000) {
-            // Código de error 11000 es para errores de duplicado en Mongoose
-            res.status(400).send({ message: "El nombre ya existe. Por favor, elija otro nombre." });
-        } else {
-            res.status(500).send({ message: "Error al agregar el puntaje." });
-        }
+        res.status(500).send({ message: "Error al agregar el Cliente." });
     }
 });
-
-// READ - one
-router.get("/getPuntaje/:id", async (req, res) => {
-    const id = req.params.id;
-    const respuesta = await ModelPuntaje.findById(id);
-    res.send(respuesta);
-});
-
-// READ - all
-router.get("/getAllPuntajes", async (req, res) => {
-    const respuesta = await ModelPuntaje.find({});
-    res.send(respuesta);
-});
-
 // Habilitar CORS para todas las solicitudes
 app.use(cors());
 
@@ -58,23 +46,8 @@ dbConnect()
         app.listen(port, () => {
             console.log("Escuchando en el puerto:", port);
         });
-
-        // Inserción y eliminación periódica
-        setInterval(async () => {
-            try {
-                // Inserción
-                const nuevoPuntaje = { /* tu objeto de puntaje aquí */ };
-                const puntajeInsertado = await ModelPuntaje.create(nuevoPuntaje);
-                console.log("Puntaje nuevo agregado: ", puntajeInsertado);
-
-                // Eliminación
-                const puntajeEliminado = await ModelPuntaje.findByIdAndDelete(puntajeInsertado._id);
-                console.log("Puntaje eliminado: ", puntajeEliminado);
-            } catch (error) {
-                console.error("Error durante la inserción o eliminación periódica: ", error);
-            }
-        }, 5 * 60 * 1000); // Cada 5 minutos
     })
     .catch(error => {
         console.log("Error al conectar a la base de datos: ", error.message);
     });
+
